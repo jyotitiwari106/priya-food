@@ -15,7 +15,7 @@ const Main2 = () => {
     formData.append("cpassword", cpassword);
     try {
       const response = await axios.get(
-        "http://192.168.1.73:9098/api/store/overall-main-category-sub-category-list/",
+        "https://mstore.bhaaraterp.com/api/store/overall-main-category-sub-category-list/",
 
         {
           params: formData,

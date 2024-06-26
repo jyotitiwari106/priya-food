@@ -6,34 +6,33 @@ import axios from "axios";
 import { useFormik } from "formik";
 
 const Contact = () => {
-  // Async function to handle form submission
   const regFn = async (name, lastName, email, number, message) => {
     try {
       const response = await axios.post(
         "https://mstore.bhaaraterp.com/api/store/contact-us-form/",
-       
-        headers: {
-          "Store-Id": 3,
-          "Content-Type": "multipart/form-data",
-        },
+
         {
           name,
           lastName,
           email,
           number,
           message,
-         
+        },
+        {
+          headers: {
+            "Store-Id": 3,
+            Token: localStorage.getItem("token"),
+          },
         }
       );
       console.log(response.data);
-      alert(response.data.message); // Improved alert message access
+      alert(response.data.message);
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("Failed to submit form. Please try again.");
     }
   };
 
-  // Use Formik for form handling
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -43,7 +42,6 @@ const Contact = () => {
       message: "",
     },
     onSubmit: (values, { resetForm }) => {
-      // Properly handle form submission
       console.log(values);
       regFn(
         values.name,
@@ -52,7 +50,7 @@ const Contact = () => {
         values.number,
         values.message
       );
-      resetForm(); // Reset form after submission
+      resetForm();
     },
   });
 
@@ -65,12 +63,12 @@ const Contact = () => {
             <h3 className="flex p-4">Contact Us</h3>
             <form
               className="flex flex-col gap-3 mt-5"
-              onSubmit={formik.handleSubmit} // Ensure form submission
+              onSubmit={formik.handleSubmit}
             >
               <div className="grid grid-cols-2 gap-3">
                 <TextField
                   size="small"
-                  name="name" // Corrected name field
+                  name="name"
                   type="text"
                   placeholder="Enter First Name"
                   label="First Name"
@@ -81,7 +79,7 @@ const Contact = () => {
                   size="small"
                   placeholder="Enter Last Name"
                   label="Last Name"
-                  name="lastName" // Corrected last name field
+                  name="lastName"
                   value={formik.values.lastName}
                   onChange={formik.handleChange}
                 />
@@ -91,7 +89,7 @@ const Contact = () => {
                 type="email"
                 placeholder="Enter Your Email"
                 label="Email address"
-                name="email" // Added missing name field
+                name="email"
                 className="w-full"
                 value={formik.values.email}
                 onChange={formik.handleChange}
@@ -100,8 +98,8 @@ const Contact = () => {
                 size="small"
                 placeholder="Enter Phone Number"
                 label="Phone Number"
-                type="text" // Changed type to text for better phone number handling
-                name="number" // Added missing name field
+                type="text"
+                name="number"
                 className="w-full"
                 value={formik.values.number}
                 onChange={formik.handleChange}
@@ -111,13 +109,13 @@ const Contact = () => {
                 multiline
                 rows={4}
                 placeholder="Enter Your Messages"
-                name="message" // Added missing name field
+                name="message"
                 value={formik.values.message}
                 onChange={formik.handleChange}
               />
               <Button
                 variant="contained"
-                type="submit" // Ensure button triggers form submission
+                type="submit"
                 className="p-2 mt-3 w-36"
               >
                 SUBMIT

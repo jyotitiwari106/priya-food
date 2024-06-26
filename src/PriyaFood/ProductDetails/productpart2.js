@@ -1,11 +1,35 @@
 import { FavoriteBorder } from "@mui/icons-material";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const ProductDetailsPart2 = () => {
   const [count, setCount] = useState(0);
+
   const increment = () => setCount(count + 1);
   const decrement = () => setCount(count > 1 ? count - 1 : 1);
+
+  const [data, setData] = useState([]);
+
+  const sellerFn = async () => {
+    const response = await axios.post(
+      "https://mstore.bhaaraterp.com/api/store/product-list/",
+      {},
+      {
+        headers: {
+          "Store-Id": 3,
+          Token: localStorage.getItem("token"),
+        },
+      }
+    );
+
+    console.log(response.data);
+    setData(response.data.data.product_list);
+  };
+
+  useEffect(() => {
+    sellerFn();
+  }, []);
   return (
     <div>
       <p className="text-xl font-bold">Qucik millet Upma</p>

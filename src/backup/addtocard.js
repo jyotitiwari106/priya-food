@@ -1,53 +1,72 @@
-import React, { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
+import React, { useState } from "react";
 import ProductDetailsPart2 from "./productpart2";
 import Description from "./description";
 import Review from "./review";
-import axios from "axios";
 
 const ProductDetails = () => {
-  const [data, setData] = useState([]);
+  const images = [
+    {
+      id: 1,
+      image: "https://priyafoods.com/cdn/shop/files/UPMA_1.jpg?v=1703309833",
+    },
+    {
+      id: 2,
+      image: "https://priyafoods.com/cdn/shop/files/UPMA_3.jpg?v=1703309832",
+    },
+    {
+      id: 3,
+      image: "https://priyafoods.com/cdn/shop/files/UPMA_2.jpg?v=1703309832",
+    },
+    {
+      id: 4,
+      image: "https://priyafoods.com/cdn/shop/files/UPMA_4.jpg?v=1703309832",
+    },
+    {
+      id: 5,
+      image:
+        "https://priyafoods.com/cdn/shop/files/PULIHORAPOHA_7.jpg?v=1703656291",
+    },
+    {
+      id: 6,
+      image:
+        "https://priyafoods.com/cdn/shop/files/PULIHORAPOHA_6.jpg?v=1703656291",
+    },
+    {
+      id: 7,
+      image:
+        "https://priyafoods.com/cdn/shop/files/PULIHORAPOHA_5.jpg?v=1703656291",
+    },
+    {
+      id: 8,
+      image:
+        "https://priyafoods.com/cdn/shop/files/MILLETUPMA_1.jpg?v=1703309920",
+    },
+    {
+      id: 9,
+      image:
+        "https://priyafoods.com/cdn/shop/files/MILLETUPMA_2.jpg?v=1703309920",
+    },
+  ];
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleRange, setVisibleRange] = useState([0, 5]);
-
-  const sellerFn = async () => {
-    try {
-      const response = await axios.post(
-        `https://mstore.bhaaraterp.com/api/store/product-list/`,
-        {},
-        {
-          headers: {
-            "Store-Id": 3,
-            Token: localStorage.getItem("token"),
-          },
-        }
-      );
-      console.log(response.data);
-      setData(response.data.data.product_list[0].varients_multiple_image);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    sellerFn();
-  }, []);
+  const [visibleRange, setVisibleRange] = useState([0, 5]); // Range of visible thumbnails
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex < data.length - 1 ? prevIndex + 1 : 0
+      prevIndex < images.length - 1 ? prevIndex + 1 : 0
     );
     updateThumbnailRange(currentIndex + 1);
   };
 
   const handlePrevious = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : data.length - 1
+      prevIndex > 0 ? prevIndex - 1 : images.length - 1
     );
     updateThumbnailRange(currentIndex - 1);
   };
@@ -76,7 +95,7 @@ const ProductDetails = () => {
 
   const handleThumbnailDown = () => {
     setVisibleRange((prevRange) => {
-      if (prevRange[1] < data.length) {
+      if (prevRange[1] < images.length) {
         return [prevRange[0] + 1, prevRange[1] + 1];
       }
       return prevRange;
@@ -94,13 +113,11 @@ const ProductDetails = () => {
             >
               <ChevronLeft />
             </button>
-            {data.length > 0 && (
-              <img
-                src={data[currentIndex].variant_image}
-                alt=""
-                className="object-cover h-full w-full"
-              />
-            )}
+            <img
+              src={images[currentIndex].image}
+              alt=""
+              className="object-cover h-full w-full"
+            />
             <button
               onClick={handleNext}
               className="absolute right-0 p-2 border-2 border-black rounded-full z-10"
@@ -111,12 +128,12 @@ const ProductDetails = () => {
 
           <div className="flex flex-col h-96 gap-1 relative">
             <div className="flex flex-col gap-1 overflow-hidden h-full">
-              {data
+              {images
                 .slice(visibleRange[0], visibleRange[1])
                 .map((img, index) => (
                   <img
                     key={img.id}
-                    src={img.variant_image}
+                    src={img.image}
                     alt=""
                     onClick={() =>
                       handleThumbnailClick(visibleRange[0] + index)
@@ -134,13 +151,13 @@ const ProductDetails = () => {
                 onClick={handleThumbnailUp}
                 className=" p-2 bg-gray-300 shadow"
               >
-                <ExpandLess />
+                <ExpandMore />
               </button>
               <button
                 onClick={handleThumbnailDown}
                 className=" p-2 bg-gray-300 shadow "
               >
-                <ExpandMore />
+                <ExpandLess />
               </button>
             </div>
           </div>
